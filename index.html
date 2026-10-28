@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="NDC実習">
+  <title>NDC実習リマインダー</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <button class="icon-btn" id="prevDay" aria-label="前の日">‹</button>
+    <div class="date-box">
+      <input type="date" id="datePicker" aria-label="日付">
+      <span id="dateLabel"></span>
+    </div>
+    <button class="icon-btn" id="nextDay" aria-label="次の日">›</button>
+  </header>
+
+  <div id="permBanner" class="banner" hidden>
+    <span>通知がオフです。リマインドを受け取るには許可してください。</span>
+    <button id="enableNotif" class="btn small">通知を許可</button>
+  </div>
+
+  <main>
+    <section id="nextCard" class="next-card" hidden>
+      <div class="next-label">次の予定</div>
+      <div class="next-title" id="nextTitle"></div>
+      <div class="next-meta" id="nextMeta"></div>
+      <div class="next-countdown" id="nextCountdown"></div>
+    </section>
+
+    <section class="list-head">
+      <h2>タイムライン</h2>
+      <span id="summary" class="muted"></span>
+    </section>
+    <ol id="timeline" class="timeline"></ol>
+    <p id="empty" class="empty" hidden>この日の予定はまだありません。<br>右下の「＋」から追加してください。</p>
+
+    <section class="tools">
+      <button class="btn ghost" id="exportIcs">📅 この日をカレンダーに書き出し(.ics)</button>
+      <button class="btn ghost" id="testAlarm">🔔 アラームをテスト</button>
+      <label class="toggle"><input type="checkbox" id="soundOn" checked> アラーム音</label>
+      <label class="toggle"><input type="checkbox" id="keepAwake"> 画面を消さない</label>
+      <p class="note">⚠ 患者さんの氏名・ID等の個人情報は入力せず、ベッド番号やイニシャル程度にとどめてください。データはこの端末内にのみ保存されます。</p>
+    </section>
+  </main>
+
+  <button class="fab" id="addBtn" aria-label="予定を追加">＋</button>
+
+  <dialog id="editor">
+    <form method="dialog" id="editForm">
+      <h3 id="editorTitle">予定を追加</h3>
+
+      <label>手技・予定
+        <input id="fTitle" required placeholder="例: 動脈血採血" list="procList" autocomplete="off">
+        <datalist id="procList"></datalist>
+      </label>
+      <div class="chips" id="procChips"></div>
+
+      <div class="row">
+        <label>開始時刻<input type="time" id="fTime" required></label>
+        <label>所要(分)<input type="number" id="fDuration" min="0" step="5" value="30"></label>
+      </div>
+
+      <label>場所 / ベッド
+        <input id="fPlace" placeholder="例: 5東 512-2" autocomplete="off">
+      </label>
+      <label>指導医・担当
+        <input id="fWho" placeholder="例: ○○先生" autocomplete="off">
+      </label>
+      <label>メモ・持ち物
+        <textarea id="fMemo" rows="3" placeholder="例: ABGキット、ヘパリン、同意書確認"></textarea>
+      </label>
+
+      <fieldset>
+        <legend>リマインド</legend>
+        <div class="chips" id="remindChips"></div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" class="btn danger" id="deleteBtn" hidden>削除</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn ghost" id="cancelBtn">キャンセル</button>
+        <button type="submit" class="btn" id="saveBtn">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="alarmOverlay" class="alarm-overlay" hidden>
+    <div class="alarm-box">
+      <div class="alarm-bell">🔔</div>
+      <div class="alarm-when" id="alarmWhen"></div>
+      <div class="alarm-title" id="alarmTitle"></div>
+      <div class="alarm-meta" id="alarmMeta"></div>
+      <div class="actions">
+        <button class="btn ghost" id="snoozeBtn">5分後にもう一度</button>
+        <button class="btn" id="dismissBtn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
