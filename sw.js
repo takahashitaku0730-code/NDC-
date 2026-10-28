@@ -1,5 +1,5 @@
 // オフラインでも開けるようにアプリ本体をキャッシュする
-const CACHE = 'ndc-reminder-v1';
+const CACHE = 'ndc-reminder-v2';
 const ASSETS = ['./', 'index.html', 'style.css', 'app.js', 'manifest.json', 'icon.svg'];
 
 self.addEventListener('install', (e) => {
